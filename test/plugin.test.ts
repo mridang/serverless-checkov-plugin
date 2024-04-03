@@ -1,4 +1,4 @@
-//import runServerless from '@serverless/test/run-serverless';
+import runServerless from '@serverless/test/run-serverless';
 import path from 'path';
 // @ts-ignore
 import logEmitter from 'log/lib/emitter.js';
