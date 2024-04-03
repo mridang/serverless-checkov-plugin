@@ -13,38 +13,35 @@
     "lint:fix": "npx eslint --ext .jsx,.js,.tsx,.ts . --fix"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "keywords": [
     "serverless",
     "serverless framework",
     "serverless plugin",
     "checkov"
   ],
-  "author": "Mridang Agarwala <mridang.agarwalla@gmail.com> (https://github.com/mridang)",
+  "author": {
+    "name": "Mridang Agarwalla",
+    "email": "mridang.agarwalla@gmail.com",
+    "url": "https://github.com/mridang"
+  },
   "files": [
     "dist"
   ],
   "license": "ISC",
   "dependencies": {
-    "d": "^1.0.2",
-    "es5-ext": "^0.10.64",
-    "es6-iterator": "^2.0.3",
-    "es6-symbol": "^3.1.4",
-    "esniff": "^2.0.1",
-    "event-emitter": "^0.3.5",
-    "ext": "^1.7.0",
-    "next-tick": "^1.1.0",
-    "type": "^2.7.2"
   },
-  "description": "",
+  "description": "A plugin for the serverless framework to inspect the setup via Checkov",
+  "private": false,
   "peerDependencies": {
     "serverless": "^3.38.0"
   },
   "engines": {
     "node": "20.x"
   },
-  "repository": {
-    "url": "https://github.com/mridang/serverless-checkov-plugin"
-  },
+  "repository": "https://github.com/mridang/serverless-checkov-plugin",
+  "homepage": "https://github.com/mridang/serverless-checkov-plugin",
+  "bugs": "https://github.com/mridang/serverless-checkov-plugin/issues",
   "overrides": {
     "eslint-config-standard-with-typescript": {
       "@typescript-eslint/eslint-plugin": "^7.0.0"
