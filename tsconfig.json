@@ -13,11 +13,12 @@
     "typeRoots": ["./node_modules/@types", "./types"]
   },
   "include": [
-    "**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "dist"
+    "dist",
+    "test"
   ]
 }
