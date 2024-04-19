@@ -1,25 +1,32 @@
+/// <reference path="./serverless.d.ts" />
 import runServerless from '@serverless/test/run-serverless';
 import path from 'path';
 // @ts-ignore
 import logEmitter from 'log/lib/emitter.js';
 
-// @ts-ignore
-logEmitter.on('log', (event) => {
-  console.log(event.logger.namespace)
-  console.log(event);
-});
+const logsBuffer: string[] = [];
+logEmitter.on(
+  'log',
+  (event: { logger: { namespace: string }; messageTokens: string[] }) => {
+    if (
+      !event.logger.namespace.startsWith('serverless:lifecycle') &&
+      event.logger.namespace !== 'serverless'
+    ) {
+      logsBuffer.push(event.messageTokens[0]);
+    }
+  },
+);
 
-describe('ServerlessCheckovPlugin', () => {
-  it('should run Checkov on command', async () => {
-    // @ts-ignore
-    const xxxx = await runServerless(path.resolve('node_modules/serverless'), {
-      cwd: path.resolve(__dirname, 'fixtures', 'simple-service'),
-      command: 'package',
-      fixture: 'testService',
-    });
+describe('plugin tests', () => {
+  it('should run checkov on package', async () => {
+    await runServerless(
+      path.join(require.resolve('serverless'), '..', '..'),
+      {
+        cwd: path.resolve(__dirname, 'fixtures', 'simple-service'),
+        command: 'package',
+      },
+    );
 
-    // @ts-ignore
-    console.log(xxxx.output)
-    console.log(xxxx.stdoutData); // Log standard output
+    expect(logsBuffer.join("\n")).toContain("Passed checks: 3, Failed checks: 6, Skipped checks: 0");
   });
 });

@@ -2,12 +2,13 @@ import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as util from 'util';
 import Serverless from 'serverless';
-import { Logging } from 'serverless/classes/Plugin';
+import Plugin, { Logging } from 'serverless/classes/Plugin';
 
 const exec = util.promisify(childProcess.exec);
 
-class ServerlessCheckovPlugin {
-  public readonly hooks: { [key: string]: () => Promise<void> };
+class ServerlessCheckovPlugin implements Plugin {
+  public readonly hooks: { [key: string]: any } = {};
+  public readonly name: string = 'serverless-checkov-plugin';
 
   constructor(
     private readonly serverless: Serverless,

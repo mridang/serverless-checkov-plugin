@@ -4,7 +4,7 @@ module.exports = {
     '^.+\\.m?[tj]sx?$': [
       'ts-jest',
       {
-        tsconfig: 'tsconfig.jest.json'
+        tsconfig: 'tsconfig.jest.json',
       },
     ],
   },
