@@ -1,18 +1,18 @@
 module.exports = {
   env: {
-    node: true, // Node.js global variables and Node.js scoping.
-    es2021: true, // Adds all ECMAScript 2021 globals and automatically sets the `ecmaVersion` parser option to 12.
+    node: true,
+    es2021: true,
   },
   extends: [
-    'eslint:recommended', // Use the recommended rules from ESLint
-    'plugin:@typescript-eslint/recommended', // Use the recommended rules from the @typescript-eslint/eslint-plugin
-    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier,
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
-  parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 12, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    project: './tsconfig.json', // Specify the TypeScript config file
+    ecmaVersion: 12,
+    sourceType: 'module',
+    project: './tsconfig.jest.json',
   },
   plugins: ['@typescript-eslint'],
   rules: {

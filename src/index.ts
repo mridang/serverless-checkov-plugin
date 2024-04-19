@@ -7,7 +7,7 @@ import Plugin, { Logging } from 'serverless/classes/Plugin';
 const exec = util.promisify(childProcess.exec);
 
 class ServerlessCheckovPlugin implements Plugin {
-  public readonly hooks: { [key: string]: any } = {};
+  public readonly hooks: Plugin.Hooks = {};
   public readonly name: string = 'serverless-checkov-plugin';
 
   constructor(
