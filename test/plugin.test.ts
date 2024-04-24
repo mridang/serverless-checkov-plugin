@@ -1,4 +1,3 @@
-// @ts-expect-error since the types are missing
 import runServerless from '@serverless/test/run-serverless';
 import path from 'path';
 // @ts-expect-error since the types are missing
