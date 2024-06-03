@@ -6,24 +6,23 @@ module.exports = {
     [
       '@semantic-release/npm',
       {
-        npmPublish: true
-      }
+        npmPublish: true,
+      },
     ],
     [
       '@semantic-release/github',
       {
-        assets: [
-          { path: 'dist/**', label: 'Distribution files' }
-        ]
-      }
+        assets: [{ path: 'dist/**', label: 'Distribution files' }],
+      },
     ],
     [
       '@semantic-release/git',
       {
         assets: ['package.json', 'package-lock.json'],
-        message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
-      }
-    ]
+        message:
+          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
+      },
+    ],
   ],
-  repositoryUrl: 'https://github.com/mridang/serverless-checkov-plugin'
+  repositoryUrl: 'https://github.com/mridang/serverless-checkov-plugin',
 };
