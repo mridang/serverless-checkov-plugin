@@ -1,5 +1,5 @@
 {
-  "name": "serverless-checkov-plugin",
+  "name": "@mridang/serverless-checkov-plugin",
   "version": "0.0.1",
   "scripts": {
     "prepack": "tsc",
@@ -29,8 +29,6 @@
     "dist"
   ],
   "license": "ISC",
-  "dependencies": {
-  },
   "description": "A plugin for the serverless framework to inspect the setup via Checkov",
   "private": false,
   "peerDependencies": {
@@ -69,6 +67,7 @@
     "jest": "^29.7.0",
     "npm": "^10.4.0",
     "prettier": "^3.1.1",
+    "semantic-release": "^24.0.0",
     "serverless": "^3.38.0",
     "source-map-support": "^0.5.21",
     "ts-jest": "^29.1.0",
