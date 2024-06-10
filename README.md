@@ -25,7 +25,7 @@ And then add the plugin to your `serverless.yml` file:
 
 ```yaml
 plugins:
-- serverless-checkov-plugin
+  - serverless-checkov-plugin
 ```
 
 A thorough guide on installing plugins can be found at
