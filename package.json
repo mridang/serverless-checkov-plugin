@@ -43,9 +43,6 @@
 	},
 	"homepage": "https://github.com/mridang/serverless-checkov-plugin",
 	"bugs": "https://github.com/mridang/serverless-checkov-plugin/issues",
-	"overrides": {
-		"ip": "2.0.1"
-	},
 	"devDependencies": {
 		"@semantic-release/commit-analyzer": "^13.0.0",
 		"@semantic-release/git": "^10.0.1",
