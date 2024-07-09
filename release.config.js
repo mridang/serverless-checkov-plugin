@@ -27,6 +27,5 @@ export default {
       },
     ],
   ],
-	repositoryUrl:
-		'git+https://github.com/mridang/serverless-checkov-plugin.git',
+  repositoryUrl: 'git+https://github.com/mridang/serverless-checkov-plugin.git',
 };

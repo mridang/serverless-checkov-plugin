@@ -2,6 +2,8 @@ import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as util from 'util';
 import Serverless from 'serverless';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore since the types are broken
 import Plugin, { Logging } from 'serverless/classes/Plugin';
 
 const exec = util.promisify(childProcess.exec);
@@ -45,4 +47,6 @@ class ServerlessCheckovPlugin implements Plugin {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore since the types are broken
 export = ServerlessCheckovPlugin;
