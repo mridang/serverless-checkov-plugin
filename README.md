@@ -18,14 +18,14 @@ inspected as there are no guardrails.
 Install using NPM by using the following command
 
 ```sh
-npm install --save-dev serverless-checkov-plugin
+npm install --save-dev @mridang/serverless-checkov-plugin
 ```
 
 And then add the plugin to your `serverless.yml` file:
 
 ```yaml
 plugins:
-  - serverless-checkov-plugin
+  - @mridang/serverless-checkov-plugin
 ```
 
 A thorough guide on installing plugins can be found at
