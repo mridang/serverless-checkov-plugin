@@ -1,7 +1,6 @@
 {
 	"name": "@mridang/serverless-checkov-plugin",
-	"version": "0.4.0",
-	"type": "module",
+	"version": "0.3.3",
 	"scripts": {
 		"prepack": "tsc",
 		"build": "tsc",
