@@ -2,6 +2,7 @@ import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as util from 'util';
 import Serverless from 'serverless';
+// eslint-disable-next-line import/no-unresolved
 import Plugin, { Logging } from 'serverless/classes/Plugin';
 
 const exec = util.promisify(childProcess.exec);
