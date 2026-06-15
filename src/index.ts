@@ -74,4 +74,4 @@ class ServerlessCheckovPlugin implements Plugin {
   }
 }
 
-export = ServerlessCheckovPlugin;
+export default ServerlessCheckovPlugin;
