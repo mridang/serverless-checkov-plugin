@@ -1,7 +1,6 @@
 import runServerless from '@serverless/test/run-serverless';
-import path from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import { createRequire } from 'module';
 // @ts-expect-error since the types are missing
 import logEmitter from 'log/lib/emitter.js';
