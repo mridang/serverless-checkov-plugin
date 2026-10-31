@@ -1,36 +1,69 @@
-import runServerless from '@serverless/test/run-serverless';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
-// @ts-expect-error since the types are missing
-import logEmitter from 'log/lib/emitter.js';
+import { readFileSync, rmSync } from 'fs';
+import { join } from 'path';
+import ServerlessCheckovPlugin from '../src/index';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const require = createRequire(import.meta.url);
-
-const logsBuffer: string[] = [];
-logEmitter.on(
-  'log',
-  (event: { logger: { namespace: string }; messageTokens: string[] }) => {
-    if (
-      !event.logger.namespace.startsWith('serverless:lifecycle') &&
-      event.logger.namespace !== 'serverless'
-    ) {
-      logsBuffer.push(event.messageTokens[0]);
-    }
-  },
-);
+type Ctor = ConstructorParameters<typeof ServerlessCheckovPlugin>;
 
 describe('plugin tests', () => {
-  it('should run checkov on package', async () => {
-    await runServerless(path.join(require.resolve('serverless'), '..', '..'), {
-      cwd: path.resolve(__dirname, 'fixtures', 'simple-service'),
-      command: 'package',
-    });
+  const callsFile = join(process.env.DOCKER_STUB_DIR as string, 'calls.txt');
 
-    expect(logsBuffer.join('\n')).toContain(
-      'Passed checks: 3, Failed checks: 6, Skipped checks: 0',
+  beforeEach(() => {
+    rmSync(callsFile, { force: true });
+  });
+
+  it('should pull the image and run checkov on the compiled template', async () => {
+    const logs: string[] = [];
+    const record = (line: string) => logs.push(line);
+    const logging = {
+      log: {
+        info: record,
+        debug: record,
+        warning: record,
+        success: record,
+        error: record,
+      },
+    };
+    const serverless = { config: { servicePath: '/work/service' } };
+    const plugin = new ServerlessCheckovPlugin(
+      serverless as unknown as Ctor[0],
+      {} as Ctor[1],
+      logging as unknown as Ctor[2],
     );
+
+    (plugin.hooks['before:package:initialize'] as () => void)();
+    await (plugin.hooks['before:package:finalize'] as () => Promise<void>)();
+
+    const calls = readFileSync(callsFile, 'utf8').split('\n');
+    expect(calls[0]).toBe('pull bridgecrew/checkov');
+    expect(calls[1]).toContain('--volume=/work/service/.serverless:/tmp/sls');
+    expect(calls[1]).toContain(
+      '/tmp/sls/cloudformation-template-create-stack.json',
+    );
+    expect(logs).toContain(
+      'Passed checks: 3, Failed checks: 6, Skipped checks: 0\n',
+    );
+    expect(logs).toContain('Checkov analysis completed successfully.');
+  });
+
+  it('should fail when the image was never pulled', async () => {
+    const noop = () => undefined;
+    const logging = {
+      log: {
+        info: noop,
+        debug: noop,
+        warning: noop,
+        success: noop,
+        error: noop,
+      },
+    };
+    const plugin = new ServerlessCheckovPlugin(
+      { config: { servicePath: '/work/service' } } as unknown as Ctor[0],
+      {} as Ctor[1],
+      logging as unknown as Ctor[2],
+    );
+
+    await expect(
+      (plugin.hooks['before:package:finalize'] as () => Promise<void>)(),
+    ).rejects.toThrow('No prefeched image was found');
   });
 });
