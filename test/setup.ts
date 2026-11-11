@@ -1,13 +1,22 @@
-import { chmodSync, mkdtempSync, writeFileSync } from 'node:fs';
+/**
+ * @file Jest global setup that installs a stub docker binary on the PATH.
+ */
+import { chmod, mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import path from 'node:path';
 
-// noinspection JSUnusedGlobalSymbols
+/**
+ * Installs a stub docker executable that records its arguments and prints a Checkov summary.
+ * @example
+ * ```ts
+ * await setup();
+ * ```
+ */
 export default async function setup(): Promise<void> {
-  const dir = mkdtempSync(join(tmpdir(), 'checkov-docker-stub-'));
-  const calls = join(dir, 'calls.txt');
-  const docker = join(dir, 'docker');
-  writeFileSync(
+  const dir = await mkdtemp(path.join(tmpdir(), 'checkov-docker-stub-'));
+  const calls = path.join(dir, 'calls.txt');
+  const docker = path.join(dir, 'docker');
+  await writeFile(
     docker,
     [
       '#!/bin/sh',
@@ -18,7 +27,7 @@ export default async function setup(): Promise<void> {
       '',
     ].join('\n'),
   );
-  chmodSync(docker, 0o755);
+  await chmod(docker, 0o755);
   process.env.PATH = `${dir}:${process.env.PATH}`;
   process.env.DOCKER_STUB_DIR = dir;
 }

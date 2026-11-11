@@ -1,14 +1,20 @@
-import { readFileSync, rmSync } from 'node:fs';
-import { join } from 'node:path';
+/**
+ * @file Tests for the Checkov plugin hooks against a stubbed docker binary.
+ */
+import { readFile, rm } from 'node:fs/promises';
+import path from 'node:path';
 import ServerlessCheckovPlugin from '../src/index';
 
 type Ctor = ConstructorParameters<typeof ServerlessCheckovPlugin>;
 
 describe('plugin tests', () => {
-  const callsFile = join(process.env.DOCKER_STUB_DIR as string, 'calls.txt');
+  const callsFile = path.join(
+    process.env.DOCKER_STUB_DIR as string,
+    'calls.txt',
+  );
 
-  beforeEach(() => {
-    rmSync(callsFile, { force: true });
+  beforeEach(async () => {
+    await rm(callsFile, { force: true });
   });
 
   it('should pull the image and run checkov on the compiled template', async () => {
@@ -33,10 +39,12 @@ describe('plugin tests', () => {
     (plugin.hooks['before:package:initialize'] as () => void)();
     await (plugin.hooks['before:package:finalize'] as () => Promise<void>)();
 
-    const calls = readFileSync(callsFile, 'utf8').split('\n');
+    const output = await readFile(callsFile, 'utf8');
+    const calls = output.split('\n');
     expect(calls[0]).toBe('pull bridgecrew/checkov');
     expect(calls[1]).toContain('--volume=/work/service/.serverless:/tmp/sls');
     expect(calls[1]).toContain(
+      // eslint-disable-next-line sonarjs/publicly-writable-directories -- test fixture
       '/tmp/sls/cloudformation-template-create-stack.json',
     );
     expect(logs).toContain(

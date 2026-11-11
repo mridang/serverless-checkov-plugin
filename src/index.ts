@@ -1,11 +1,14 @@
-import * as childProcess from 'node:child_process';
-import * as path from 'node:path';
-import * as util from 'node:util';
+/**
+ * @file Serverless Framework plugin that prefetches and runs the Checkov image around packaging.
+ */
+import { exec as execCallback } from 'node:child_process';
+import path from 'node:path';
+import { promisify } from 'node:util';
 import Serverless from 'serverless';
 
 import Plugin, { Logging } from 'serverless/classes/Plugin';
 
-const exec = util.promisify(childProcess.exec);
+const exec = promisify(execCallback);
 
 class ServerlessCheckovPlugin implements Plugin {
   public readonly hooks: Plugin.Hooks = {};
