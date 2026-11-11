@@ -1,4 +1,4 @@
-import { rmSync } from 'fs';
+import { rmSync } from 'node:fs';
 
 // noinspection JSUnusedGlobalSymbols
 export default async function teardown(): Promise<void> {

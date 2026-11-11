@@ -1,6 +1,6 @@
-import * as childProcess from 'child_process';
-import * as path from 'path';
-import * as util from 'util';
+import * as childProcess from 'node:child_process';
+import * as path from 'node:path';
+import * as util from 'node:util';
 import Serverless from 'serverless';
 
 import Plugin, { Logging } from 'serverless/classes/Plugin';
