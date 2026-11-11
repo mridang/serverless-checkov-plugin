@@ -1,8 +1,17 @@
-import { rmSync } from 'fs';
+/**
+ * @file Jest global teardown that removes the stub docker directory.
+ */
+import { rm } from 'node:fs/promises';
 
-// noinspection JSUnusedGlobalSymbols
+/**
+ * Removes the temporary directory that holds the stub docker binary.
+ * @example
+ * ```ts
+ * await teardown();
+ * ```
+ */
 export default async function teardown(): Promise<void> {
   if (process.env.DOCKER_STUB_DIR) {
-    rmSync(process.env.DOCKER_STUB_DIR, { recursive: true, force: true });
+    await rm(process.env.DOCKER_STUB_DIR, { recursive: true, force: true });
   }
 }

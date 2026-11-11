@@ -1,3 +1,6 @@
+/**
+ * @file Ambient type shims for the serverless package subpaths used by the plugin.
+ */
 // Ambient module shims for `serverless/...` subpaths.
 //
 // The `serverless` npm package does not declare an `exports` map that exposes
@@ -18,14 +21,11 @@ declare module 'serverless/classes/Plugin' {
 
   interface Plugin {
     hooks: Plugin.Hooks;
-    commands?: Plugin.Commands | undefined;
-    variableResolvers?: Plugin.VariableResolvers | undefined;
-    configurationVariablesSources?:
-      Plugin.ConfigurationVariablesSources | undefined;
+    commands?: Plugin.Commands;
+    variableResolvers?: Plugin.VariableResolvers;
+    configurationVariablesSources?: Plugin.ConfigurationVariablesSources;
     provider?:
-      | string
-      | ReturnType<InstanceType<typeof Serverless>['getProvider']>
-      | undefined;
+      string | ReturnType<InstanceType<typeof Serverless>['getProvider']>;
   }
 
   namespace Plugin {
@@ -35,33 +35,29 @@ declare module 'serverless/classes/Plugin' {
 
     interface Commands {
       [command: string]: {
-        usage?: string | undefined;
-        lifecycleEvents?: string[] | undefined;
-        commands?:
-          | {
-              [command: string]: {
-                lifecycleEvents?: string[];
-                usage?: string;
-                options?: {
-                  [option: string]: {
-                    usage?: string | undefined;
-                    required?: boolean | undefined;
-                    shortcut?: string | undefined;
-                    type: 'string' | 'boolean' | 'multiple';
-                  };
-                };
-              };
-            }
-          | undefined;
-        options?:
-          | {
+        usage?: string;
+        lifecycleEvents?: string[];
+        commands?: {
+          [command: string]: {
+            lifecycleEvents?: string[];
+            usage?: string;
+            options?: {
               [option: string]: {
-                usage?: string | undefined;
-                required?: boolean | undefined;
-                shortcut?: string | undefined;
+                usage?: string;
+                required?: boolean;
+                shortcut?: string;
+                type: 'string' | 'boolean' | 'multiple';
               };
-            }
-          | undefined;
+            };
+          };
+        };
+        options?: {
+          [option: string]: {
+            usage?: string;
+            required?: boolean;
+            shortcut?: string;
+          };
+        };
       };
     }
 
@@ -72,8 +68,8 @@ declare module 'serverless/classes/Plugin' {
         | VariableResolver
         | {
             resolver: VariableResolver;
-            isDisabledAtPrepopulation?: boolean | undefined;
-            serviceName?: string | undefined;
+            isDisabledAtPrepopulation?: boolean;
+            serviceName?: string;
           };
     }
 
@@ -86,8 +82,8 @@ declare module 'serverless/classes/Plugin' {
         | ConfigurationVariablesSource
         | {
             resolve: ConfigurationVariablesSource;
-            isDisabledAtPrepopulation?: boolean | undefined;
-            serviceName?: string | undefined;
+            isDisabledAtPrepopulation?: boolean;
+            serviceName?: string;
           };
     }
 
@@ -148,9 +144,9 @@ declare module 'serverless/plugins/aws/provider/awsProvider' {
         Tags?: Array<{ Key: string; Value: string }>;
         [key: string]: unknown;
       };
-      DependsOn?: string | { [key: string]: unknown } | undefined;
-      Condition?: string | undefined;
-      DeletionPolicy?: string | undefined;
+      DependsOn?: string | { [key: string]: unknown };
+      Condition?: string;
+      DeletionPolicy?: string;
     }
 
     interface CloudFormationResources {
