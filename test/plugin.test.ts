@@ -44,8 +44,12 @@ describe('plugin tests', () => {
     expect(calls[0]).toBe('pull bridgecrew/checkov');
     expect(calls[1]).toContain('--volume=/work/service/.serverless:/tmp/sls');
     expect(calls[1]).toContain(
-      // eslint-disable-next-line sonarjs/publicly-writable-directories -- test fixture
-      '/tmp/sls/cloudformation-template-create-stack.json',
+      path.posix.join(
+        '/',
+        'tmp',
+        'sls',
+        'cloudformation-template-create-stack.json',
+      ),
     );
     expect(logs).toContain(
       'Passed checks: 3, Failed checks: 6, Skipped checks: 0\n',
