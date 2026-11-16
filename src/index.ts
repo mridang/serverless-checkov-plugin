@@ -4,9 +4,10 @@
 import { exec as execCallback } from 'node:child_process';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import Serverless from 'serverless';
+import type Serverless from 'serverless';
 
-import Plugin, { Logging } from 'serverless/classes/Plugin';
+import type { Logging } from 'serverless/classes/Plugin';
+import type Plugin from 'serverless/classes/Plugin';
 
 const exec = promisify(execCallback);
 
