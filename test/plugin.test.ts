@@ -3,15 +3,12 @@
  */
 import { readFile, rm } from 'node:fs/promises';
 import path from 'node:path';
-import ServerlessCheckovPlugin from '../src/index';
+import ServerlessCheckovPlugin from '../src/index.js';
 
 type Ctor = ConstructorParameters<typeof ServerlessCheckovPlugin>;
 
 describe('plugin tests', () => {
-  const callsFile = path.join(
-    process.env.DOCKER_STUB_DIR as string,
-    'calls.txt',
-  );
+  const callsFile = path.join(process.env.DOCKER_STUB_DIR!, 'calls.txt');
 
   beforeEach(async () => {
     await rm(callsFile, { force: true });
@@ -32,11 +29,11 @@ describe('plugin tests', () => {
     const serverless = { config: { servicePath: '/work/service' } };
     const plugin = new ServerlessCheckovPlugin(
       serverless as unknown as Ctor[0],
-      {} as Ctor[1],
+      {},
       logging as unknown as Ctor[2],
     );
 
-    (plugin.hooks['before:package:initialize'] as () => void)();
+    plugin.hooks['before:package:initialize']();
     await (plugin.hooks['before:package:finalize'] as () => Promise<void>)();
 
     const output = await readFile(callsFile, 'utf8');
@@ -70,7 +67,7 @@ describe('plugin tests', () => {
     };
     const plugin = new ServerlessCheckovPlugin(
       { config: { servicePath: '/work/service' } } as unknown as Ctor[0],
-      {} as Ctor[1],
+      {},
       logging as unknown as Ctor[2],
     );
 
