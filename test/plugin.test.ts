@@ -4,8 +4,39 @@
 import { readFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import ServerlessCheckovPlugin from '../src/index.js';
+import type Plugin from 'serverless/classes/Plugin';
 
 type Ctor = ConstructorParameters<typeof ServerlessCheckovPlugin>;
+
+/**
+ * Builds a complete logging facade whose log methods all forward to one sink.
+ *
+ * @param sink - receives every log call
+ * @returns a logging facade with the full Serverless shape
+ */
+function createLogging(sink: (...args: unknown[]) => void): Plugin.Logging {
+  const progress: Plugin.Progress = {
+    namespace: 'test',
+    name: 'test',
+    update: sink,
+    info: sink,
+    notice: sink,
+    remove: () => undefined,
+  };
+  return {
+    log: {
+      error: sink,
+      warning: sink,
+      notice: sink,
+      info: sink,
+      debug: sink,
+      verbose: sink,
+      success: sink,
+    },
+    writeText: sink,
+    progress: { get: () => progress, create: () => progress },
+  };
+}
 
 describe('plugin tests', () => {
   const callsFile = path.join(process.env.DOCKER_STUB_DIR!, 'calls.txt');
@@ -16,25 +47,18 @@ describe('plugin tests', () => {
 
   it('should pull the image and run checkov on the compiled template', async () => {
     const logs: string[] = [];
-    const record = (line: string) => logs.push(line);
-    const logging = {
-      log: {
-        info: record,
-        debug: record,
-        warning: record,
-        success: record,
-        error: record,
-      },
-    };
+    const record = (line: unknown) => logs.push(String(line));
+    const logging = createLogging(record);
     const serverless = { config: { servicePath: '/work/service' } };
     const plugin = new ServerlessCheckovPlugin(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- a full Serverless instance needs a real service load; the plugin reads only config.servicePath
       serverless as unknown as Ctor[0],
       {},
-      logging as unknown as Ctor[2],
+      logging,
     );
 
     plugin.hooks['before:package:initialize']();
-    await (plugin.hooks['before:package:finalize'] as () => Promise<void>)();
+    await plugin.hooks['before:package:finalize']();
 
     const output = await readFile(callsFile, 'utf8');
     const calls = output.split('\n');
@@ -56,23 +80,16 @@ describe('plugin tests', () => {
 
   it('should fail when the image was never pulled', async () => {
     const noop = () => undefined;
-    const logging = {
-      log: {
-        info: noop,
-        debug: noop,
-        warning: noop,
-        success: noop,
-        error: noop,
-      },
-    };
+    const logging = createLogging(noop);
     const plugin = new ServerlessCheckovPlugin(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- a full Serverless instance needs a real service load; the plugin reads only config.servicePath
       { config: { servicePath: '/work/service' } } as unknown as Ctor[0],
       {},
-      logging as unknown as Ctor[2],
+      logging,
     );
 
     await expect(
-      (plugin.hooks['before:package:finalize'] as () => Promise<void>)(),
+      Promise.resolve(plugin.hooks['before:package:finalize']()),
     ).rejects.toThrow('No prefeched image was found');
   });
 });
