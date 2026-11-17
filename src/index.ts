@@ -6,7 +6,6 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import type Serverless from 'serverless';
 
-import type { Logging } from 'serverless/classes/Plugin';
 import type Plugin from 'serverless/classes/Plugin';
 
 const exec = promisify(execCallback);
@@ -22,7 +21,7 @@ class ServerlessCheckovPlugin implements Plugin {
   constructor(
     private readonly serverless: Serverless,
     _options: Serverless.Options,
-    private readonly logging: Logging,
+    private readonly logging: Plugin.Logging,
   ) {
     this.hooks = {
       'before:package:initialize': this.pullImage.bind(this),
